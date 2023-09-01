@@ -1,10 +1,14 @@
 from django.shortcuts import render,HttpResponse,redirect,get_object_or_404
-from .forms import UserRegisterForm
+from .forms import UserRegisterForm,UpdateUserProfile
 from django.contrib.auth import get_user_model,authenticate,login,logout
 import random
 from . models import User,UserProfile
 User=get_user_model()
 # Create your views here.
+
+def home(request):
+    return render(request, "user/home.html")
+
 def register(request):
     form=UserRegisterForm()
        
@@ -38,6 +42,13 @@ def loginUser(request):
     return render(request, "user/loginUser.html")
 
 
+def logoutUser(request):
+    if request.method=="POST":
+        logout(request)
+        return redirect('/')
+    else:
+        return HttpResponse("$)$) NOT LOGOUT")
+
 def profile(request,user_id):
     user=get_object_or_404(User,user_id=user_id)
     profile=UserProfile.objects.get(user=user)
@@ -47,3 +58,23 @@ def profile(request,user_id):
         "user":user,
     }
     return render(request,"user/profile.html",context)
+
+def updateProfile(request,user_id):
+    if request.user==get_object_or_404(User,user_id=user_id):
+        user=get_object_or_404(User,user_id=user_id)
+        profile=UserProfile.objects.get(user=user)
+
+        form=UpdateUserProfile()
+        context={
+            'form':form
+        }
+
+        if request.method=="POST":
+            form=UpdateUserProfile(request.POST,request.FILES,instance=profile)
+            if form.is_valid():
+                form.instance.user = request.user
+                form.save()
+                return redirect('/')
+    else:
+        return HttpResponse("<H1>404 NOT ALLOWED</H1>")
+    return render(request,"user/updateProfile.html",context)

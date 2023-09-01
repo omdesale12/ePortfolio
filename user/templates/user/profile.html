@@ -4,6 +4,13 @@
 Name:{{profile.user.full_name}}<br>
 Email:{{profile.user.email}}<br>
 User_Id:{{profile.user.user_id}}<br>
+Phone Number:{{profile.phone_number}}<br>
 
 
 <img src="{{profile.profile_image.url}}" alt="" height="100px" width="150px">
+
+
+{% if profile.user == request.user %}
+<h3>UPDATE PROFILE</h3>
+<button><a href="http://localhost:8000/updateProfile/{{request.user.user_id}}">Go</a></button>
+{% endif %}

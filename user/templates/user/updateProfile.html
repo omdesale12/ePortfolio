@@ -1,0 +1,6 @@
+<H1>UPDATE PROFILE</H1>
+<form action="" method="post" enctype="multipart/form-data">
+{% csrf_token %}
+{{form.as_p}}
+<button type="submit">Save Profile</button>
+</form>

@@ -104,7 +104,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class UserProfile(models.Model):
-    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    user=models.OneToOneField(User,on_delete=models.CASCADE)
     phone_number=models.CharField(max_length=13)
     profile_image=models.ImageField(default='default1.jpg', upload_to='profile_pics')
 
