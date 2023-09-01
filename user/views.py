@@ -1,7 +1,8 @@
-from django.shortcuts import render,HttpResponse,redirect
+from django.shortcuts import render,HttpResponse,redirect,get_object_or_404
 from .forms import UserRegisterForm
 from django.contrib.auth import get_user_model,authenticate,login,logout
 import random
+from . models import User,UserProfile
 User=get_user_model()
 # Create your views here.
 def register(request):
@@ -35,3 +36,14 @@ def loginUser(request):
             return redirect('/')
 
     return render(request, "user/loginUser.html")
+
+
+def profile(request,user_id):
+    user=get_object_or_404(User,user_id=user_id)
+    profile=UserProfile.objects.get(user=user)
+    print(profile)
+    context={
+        "profile":profile,
+        "user":user,
+    }
+    return render(request,"user/profile.html",context)

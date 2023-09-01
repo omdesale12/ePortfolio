@@ -101,3 +101,22 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def is_active(self):
         return self.active
+
+
+class UserProfile(models.Model):
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    phone_number=models.CharField(max_length=13)
+    profile_image=models.ImageField(default='default1.jpg', upload_to='profile_pics')
+
+    def __str__(self):
+        return self.user.email
+
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+@receiver(post_save,sender=User)
+def create_UserProfile(sender,instance,created,**kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
+
+post_save.connect(create_UserProfile,sender=User)
