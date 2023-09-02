@@ -1,0 +1,15 @@
+<title>ePortFolio</title>
+{% if user.is_authenticated %}
+<form action="http://localhost:8000/user/logoutUser/" method="post">
+    {% csrf_token %}
+    <button type="submit">Logout</button>
+</form>
+<button><a href="http://localhost:8000/user/profile/{{request.user.user_id}}">Profile</a></button>
+{% else %}
+<a href="http://localhost:8000/user/loginUser/"><button>Login</button></a>
+{% endif %}<br>
+User:{{request.user}} <br>
+
+{% for social in social %}
+{{social.link}}
+{% endfor %}

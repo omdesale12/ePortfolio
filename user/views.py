@@ -1,13 +1,11 @@
 from django.shortcuts import render,HttpResponse,redirect,get_object_or_404
-from .forms import UserRegisterForm,UpdateUserProfile
+from .forms import UserRegisterForm,UpdateUserProfile,AddSocial
 from django.contrib.auth import get_user_model,authenticate,login,logout
 import random
-from . models import User,UserProfile
+from . models import User,UserProfile,UserSocials
 User=get_user_model()
 # Create your views here.
 
-def home(request):
-    return render(request, "user/home.html")
 
 def register(request):
     form=UserRegisterForm()
@@ -52,10 +50,22 @@ def logoutUser(request):
 def profile(request,user_id):
     user=get_object_or_404(User,user_id=user_id)
     profile=UserProfile.objects.get(user=user)
-    print(profile)
+    socials=UserSocials.objects.filter(user=profile)
+    print(socials)
+    addsocial=AddSocial()
+
+    if request.method=="POST":
+        addsocial=AddSocial(request.POST)
+        if addsocial.is_valid():
+            user_social=addsocial.save(commit=False)
+            user_social.user=request.user.userprofile
+            user_social.save()
+            return redirect("/")
     context={
         "profile":profile,
         "user":user,
+        "socials":socials,
+        "addsocial":addsocial,
     }
     return render(request,"user/profile.html",context)
 
@@ -63,7 +73,6 @@ def updateProfile(request,user_id):
     if request.user==get_object_or_404(User,user_id=user_id):
         user=get_object_or_404(User,user_id=user_id)
         profile=UserProfile.objects.get(user=user)
-
         form=UpdateUserProfile()
         context={
             'form':form
@@ -78,3 +87,5 @@ def updateProfile(request,user_id):
     else:
         return HttpResponse("<H1>404 NOT ALLOWED</H1>")
     return render(request,"user/updateProfile.html",context)
+
+

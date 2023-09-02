@@ -107,6 +107,7 @@ class UserProfile(models.Model):
     user=models.OneToOneField(User,on_delete=models.CASCADE)
     phone_number=models.CharField(max_length=13)
     profile_image=models.ImageField(default='default1.jpg', upload_to='profile_pics')
+    
 
     def __str__(self):
         return self.user.email
@@ -120,3 +121,18 @@ def create_UserProfile(sender,instance,created,**kwargs):
         UserProfile.objects.create(user=instance)
 
 post_save.connect(create_UserProfile,sender=User)
+
+
+class SocialMediaType(models.Model):
+    name=models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+    
+class UserSocials(models.Model):
+    user=models.ForeignKey(UserProfile,on_delete=models.CASCADE)
+    social=models.OneToOneField(SocialMediaType,on_delete=models.CASCADE)
+    link=models.URLField()
+
+    def __str__(self):
+        return str(self.social) + "-->" + str(self.user.user.email)

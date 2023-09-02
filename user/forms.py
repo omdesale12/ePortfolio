@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth import get_user_model
 User=get_user_model()
 from django.contrib.auth.forms import UserCreationForm
-from . models import UserProfile
+from . models import UserProfile,UserSocials
 
 class UserRegisterForm(UserCreationForm):
     class Meta:
@@ -31,3 +31,18 @@ class UpdateUserProfile(forms.ModelForm):
 
         return instance
 
+
+    
+class AddSocial(forms.ModelForm):
+    class Meta:
+        model=UserSocials
+        exclude = ['user']  # Exclude the 'user' field from the form
+
+    # def save(self, commit=True, request=None):
+    #     # Set the user field to the UserProfile of the provided request user
+    #     instance = super(AddSocial, self).save(commit=False)
+    #     if request and request.user.is_authenticated:
+    #         instance.user = request.user.userprofile  # Assuming UserProfile is linked to User
+    #     if commit:
+    #         instance.save()
+    #     return instance
