@@ -3,7 +3,7 @@ from .forms import UserRegisterForm,UpdateUserProfile,AddSocial
 from django.contrib.auth import get_user_model,authenticate,login,logout
 import random
 from . models import User,UserProfile,UserSocials
-from main.models import portfolio
+from main.models import portfolio,resume
 User=get_user_model()
 # Create your views here.
 
@@ -40,7 +40,6 @@ def loginUser(request):
 
     return render(request, "user/loginUser.html")
 
-
 def logoutUser(request):
     if request.method=="POST":
         logout(request)
@@ -53,6 +52,7 @@ def profile(request,user_id):
     profile=UserProfile.objects.get(user=user)
     socials=UserSocials.objects.filter(user=profile)
     user_portfolio=None
+    user_resume=None
     addsocial=AddSocial()
 
     if request.method=="POST":
@@ -72,6 +72,7 @@ def profile(request,user_id):
             
     try:
         user_portfolio=portfolio.objects.get(user=profile)
+        user_resume=resume.objects.get(user=profile)
     except portfolio.DoesNotExist:
         user_portfolio=None
 
@@ -80,7 +81,8 @@ def profile(request,user_id):
         "user":user,
         "socials":socials,
         "addsocial":addsocial,
-        "user_portfolio":user_portfolio
+        "user_portfolio":user_portfolio,
+        "user_resume":user_resume
     }
     return render(request,"user/profile.html",context)
 
