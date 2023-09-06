@@ -131,8 +131,12 @@ class SocialMediaType(models.Model):
     
 class UserSocials(models.Model):
     user=models.ForeignKey(UserProfile,on_delete=models.CASCADE)
-    social=models.OneToOneField(SocialMediaType,on_delete=models.CASCADE)
+    social=models.ForeignKey(SocialMediaType,on_delete=models.CASCADE)
     link=models.URLField()
 
     def __str__(self):
         return str(self.social) + "-->" + str(self.user.user.email)
+    
+    class Meta:
+        # Add a unique constraint to ensure one social type per user
+        unique_together = ('user', 'social')

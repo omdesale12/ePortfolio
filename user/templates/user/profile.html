@@ -20,7 +20,7 @@ Phone Number:{{profile.phone_number}}<br>
 {% endif %}
 <br>
 {% for socials in socials %}
-{{socials.social}} <i class="fa-brands fa-instagram"></i>: <a href="{{socials.link}}" target="_blank">{{socials.link }}</a><br>
+{{socials.social.name}} <i class="fa-brands fa-instagram"></i>: <a href="{{socials.link}}" target="_blank">{{socials.link }}</a><br>
 {% endfor %}
 
 <h3>Add Social</h3>
@@ -29,3 +29,21 @@ Phone Number:{{profile.phone_number}}<br>
 {{addsocial.as_p}}
 <button type="submit">Add</button>
 </form>
+
+
+<h3>EPORTFOLIO STATUS</h3>
+{% if user_portfolio %}
+    <!-- Display content when user_portfolio exists -->
+    <p>User Portfolio Exists:</p>
+    <h3>View my PortFolio</h3>
+    <a href="{% url 'eportfolio' request.user.email %}">View my ePortFolio</a>
+    <p>User: {{ user_portfolio.user }}</p>
+    <p>User Description: {{ user_portfolio.description }}</p>
+    <p>Created on : {{ user_portfolio.date_created }}</p>
+    <!-- Add more content related to user_portfolio here -->
+{% else %}
+    <!-- Display content when user_portfolio does not exist -->
+    <p>User Portfolio Does Not Exist</p>
+    CREATE
+    <!-- Add content for the case when user_portfolio is None or does not exist -->
+{% endif %}

@@ -3,6 +3,7 @@ from .forms import UserRegisterForm,UpdateUserProfile,AddSocial
 from django.contrib.auth import get_user_model,authenticate,login,logout
 import random
 from . models import User,UserProfile,UserSocials
+from main.models import portfolio
 User=get_user_model()
 # Create your views here.
 
@@ -51,21 +52,35 @@ def profile(request,user_id):
     user=get_object_or_404(User,user_id=user_id)
     profile=UserProfile.objects.get(user=user)
     socials=UserSocials.objects.filter(user=profile)
-    print(socials)
+    user_portfolio=None
     addsocial=AddSocial()
 
     if request.method=="POST":
         addsocial=AddSocial(request.POST)
         if addsocial.is_valid():
-            user_social=addsocial.save(commit=False)
-            user_social.user=request.user.userprofile
-            user_social.save()
-            return redirect("/")
+            user_profile = request.user.userprofile
+            social = addsocial.cleaned_data['social']
+            existing_entry = UserSocials.objects.filter(user=user_profile, social=social).first()
+            if existing_entry:
+                # Handle the case when the combination already exists
+                addsocial.add_error('social', 'This social media type already exists for this user.')
+            else:
+                user_social=addsocial.save(commit=False)
+                user_social.user=request.user.userprofile
+                user_social.save()
+                return redirect("/")
+            
+    try:
+        user_portfolio=portfolio.objects.get(user=profile)
+    except portfolio.DoesNotExist:
+        user_portfolio=None
+
     context={
         "profile":profile,
         "user":user,
         "socials":socials,
         "addsocial":addsocial,
+        "user_portfolio":user_portfolio
     }
     return render(request,"user/profile.html",context)
 
