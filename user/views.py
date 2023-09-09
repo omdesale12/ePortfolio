@@ -72,9 +72,12 @@ def profile(request,user_id):
             
     try:
         user_portfolio=portfolio.objects.get(user=profile)
-        user_resume=resume.objects.get(user=profile)
     except portfolio.DoesNotExist:
         user_portfolio=None
+    try:
+        user_resume=resume.objects.get(user=profile)
+    except resume.DoesNotExist:
+        user_resume=None
 
     context={
         "profile":profile,

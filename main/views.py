@@ -3,9 +3,9 @@ from user.models import UserProfile,UserSocials,User
 from .models import portfolio
 # Create your views here.
 def homePage(request):
-
+    portfolios=portfolio.objects.all()
     context={
-        
+        "portfolios":portfolios,
     }
     return render(request, "main/homePage.html",context)
 
@@ -30,3 +30,11 @@ def eportfolio(request,email):
         return HttpResponse("PORTFOLIO NOT FOUND")
 
         
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from api.serializers import PortfolioSerializer
+@api_view(['GET'])
+def portfolio_list(request):
+    portfolios = portfolio.objects.all()
+    serializer = PortfolioSerializer(portfolios, many=True)
+    return Response(serializer.data)
