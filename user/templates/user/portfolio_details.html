@@ -1,0 +1,97 @@
+<title>PortFolio : {{profile.user.full_name}}</title>
+<h2>PortFolio Details</h2>
+
+<h2><strong>View my PortFolio</strong></h2>
+    <!-- <a href="{% url 'eportfolio' request.user.email %}">View my ePortFolio</a>
+    <p>User: {{ user_portfolio.user }}</p>
+    <p>User Description: {{ user_portfolio.description }}</p>
+    <p>Created on : {{ user_portfolio.date_created }}</p>
+    {{ user_resume}}
+    <p>Resume : <a href="{{ user_resume.resume_file.url }}" target="_blank">View</a></p> -->
+
+    <p><strong>User:</strong>{{user_data.user.full_name}}</p>
+    <p><strong>Email:</strong>{{user_data.user.email}}</p>
+    <p><strong>Date Created:</strong> {{ user_data.portfolio.date_created }}</p>
+    <p><strong>Description:</strong> {{ user_data.portfolio.description }}</p>
+    <p><strong>Created At:</strong> {{ user_data.portfolio.date_created }}</p>
+
+
+    <!-- Display Resumes -->
+    <h2>Resumes</h2>
+    <form action="{% url 'addResume' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+    {{addResume.as_p}}
+    <button type="submit">Add Resume</button>
+    </form>
+    <ul>
+        {% for resume in user_data.resume_set.all %}
+            <li>
+                <p><strong>Resume File: <a href="{{resume.resume_file.url}}" target="_blank">View</a> </strong> {{ resume.resume_file.name }}</p>
+                <p><strong>Uploaded At:</strong> {{ resume.uploaded_at }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Display Skills -->
+    <h2>Skills</h2>
+    <ul>
+        {% for skill in user_data.skills_set.all %}
+            <li>{{ skill.name }}</li>
+        {% endfor %}
+    </ul>
+
+    <!-- Display Education -->
+    <h2>Education</h2>
+    <ul>
+        {% for education in user_data.education_set.all %}
+            <li>
+                <p><strong>University:</strong> {{ education.university }}</p>
+                <p><strong>Degree:</strong> {{ education.degree }}</p>
+                <p><strong>Graduation Year:</strong> {{ education.graduation_year_start }} - {{ education.graduation_year_end }}</p>
+                <p><strong>Grade:</strong> {{ education.grade }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Display Certifications -->
+    <h2>Certifications</h2>
+    <ul>
+        {% for certification in user_data.certifications_set.all %}
+            <li>
+                <p><strong>Title:</strong> {{ certification.title }}</p>
+                <p><strong>Issuing Organization:</strong> {{ certification.issuing_organization }}</p>
+                <p><strong>Issue Date:</strong> {{ certification.issue_date }}</p>
+                <!-- Display the certification URL if needed -->
+            </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Display Work Experience -->
+    <h2>Work Experience</h2>
+    <ul>
+        {% for work_experience in user_data.workexperience_set.all %}
+            <li>
+                <p><strong>Company Name:</strong> {{ work_experience.company_name }}</p>
+                <p><strong>Job Title:</strong> {{ work_experience.job_title }}</p>
+                <p><strong>Employment Period:</strong> {{ work_experience.employment_period }}</p>
+                <p><strong>Job Description:</strong> {{ work_experience.job_description }}</p>
+                <!-- Display achievements if needed -->
+            </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Display Projects -->
+    <h2>Projects</h2>
+    <ul>
+        {% for project in user_data.projects_set.all %}
+            <li>
+                <p><strong>Title:</strong> {{ project.title }}</p>
+                <p><strong>Description:</strong> {{ project.description }}</p>
+                <p><strong>Technologies Used:</strong> {{ project.technologies_used }}</p>
+                <p><strong>GitHub</strong> <a href="{{ project.github_repository }}" target="_blank">View</a></p>
+                <!-- Display project URL and GitHub repository if needed -->
+            </li>
+        {% endfor %}
+    </ul>
+
+        

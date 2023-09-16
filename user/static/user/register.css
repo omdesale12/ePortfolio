@@ -1,0 +1,36 @@
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+   width: 100%; /* Make form inputs fill the container width */
+   border: 1px solid #ccc; /* Light gray border */
+   padding: 4px; /* Add some padding */
+}
+
+input[type="text"]::placeholder,
+input[type="email"]::placeholder,
+input[type="password"]::placeholder {
+   color: #999; /* Light gray text for placeholders */
+   padding-left: 5px;
+}
+.btn-color{
+    background-color: #0e1c36;
+    color: #fff;
+    
+  }
+  
+  .profile-image-pic{
+    height: 200px;
+    width: 200px;
+    object-fit: cover;
+  }
+
+  
+  
+  .cardbody-color{
+    background-color: #ebf2fa;
+  }
+  
+  a{
+    text-decoration: none;
+  }

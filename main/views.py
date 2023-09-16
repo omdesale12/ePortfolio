@@ -4,6 +4,7 @@ from .models import portfolio
 # Create your views here.
 def homePage(request):
     portfolios=portfolio.objects.all()
+
     context={
         "portfolios":portfolios,
     }

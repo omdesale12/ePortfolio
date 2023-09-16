@@ -1,5 +1,6 @@
 <head>
 <title>{{profile.user.full_name}}</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"> 
 </head>
 <button><a href="http://localhost:8000/">HomePage</a></button>
@@ -33,19 +34,43 @@ Phone Number:{{profile.phone_number}}<br>
 
 <h3>EPORTFOLIO STATUS</h3>
 {% if user_portfolio %}
-    <!-- Display content when user_portfolio exists -->
-    <p>User Portfolio Exists:</p>
-    <h3>View my PortFolio</h3>
-    <a href="{% url 'eportfolio' request.user.email %}">View my ePortFolio</a>
-    <p>User: {{ user_portfolio.user }}</p>
-    <p>User Description: {{ user_portfolio.description }}</p>
-    <p>Created on : {{ user_portfolio.date_created }}</p>
-    {{ user_resume}}
-    <p>Resume : <a href="{{ user_resume.resume_file.url }}" target="_blank">View</a></p>
-    <!-- Add more content related to user_portfolio here -->
+    <p><a href="{% url 'viewPortfolio' user.user_id %}">Edit</a></p>
 {% else %}
-    <!-- Display content when user_portfolio does not exist -->
-    <p>User Portfolio Does Not Exist</p>
-    CREATE
-    <!-- Add content for the case when user_portfolio is None or does not exist -->
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+    Create PortFolio
+    </button>
 {% endif %}
+
+
+
+
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <form action="{% url 'addPortfolio' %}" method="post">
+            {% csrf_token %}
+                <div class="modal-body">
+                    {{addPortfolio.as_p}}
+                    <h2>Add Education</h2>
+                    {{addEducation.as_p}}
+                    <button>Add</button>
+                </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>

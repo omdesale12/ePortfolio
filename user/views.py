@@ -1,5 +1,5 @@
 from django.shortcuts import render,HttpResponse,redirect,get_object_or_404
-from .forms import UserRegisterForm,UpdateUserProfile,AddSocial
+from .forms import UserRegisterForm,UpdateUserProfile,AddSocial,AddPortfolio,AddEducation,AddResume
 from django.contrib.auth import get_user_model,authenticate,login,logout
 import random
 from . models import User,UserProfile,UserSocials
@@ -54,6 +54,9 @@ def profile(request,user_id):
     user_portfolio=None
     user_resume=None
     addsocial=AddSocial()
+    addPortfolio=AddPortfolio()
+    addEducation=AddEducation()
+    
 
     if request.method=="POST":
         addsocial=AddSocial(request.POST)
@@ -85,7 +88,9 @@ def profile(request,user_id):
         "socials":socials,
         "addsocial":addsocial,
         "user_portfolio":user_portfolio,
-        "user_resume":user_resume
+        "user_resume":user_resume,
+        'addPortfolio':addPortfolio,
+        'addEducation':addEducation,
     }
     return render(request,"user/profile.html",context)
 
@@ -93,7 +98,7 @@ def updateProfile(request,user_id):
     if request.user==get_object_or_404(User,user_id=user_id):
         user=get_object_or_404(User,user_id=user_id)
         profile=UserProfile.objects.get(user=user)
-        form=UpdateUserProfile()
+        form=UpdateUserProfile(instance=profile)
         context={
             'form':form
         }
@@ -108,4 +113,64 @@ def updateProfile(request,user_id):
         return HttpResponse("<H1>404 NOT ALLOWED</H1>")
     return render(request,"user/updateProfile.html",context)
 
+def portfolio_details(request,user_id):
+    if request.user==get_object_or_404(User,user_id=user_id):
+        user=get_object_or_404(User,user_id=user_id)
+        profile=get_object_or_404(UserProfile,user=user)
+        user_portfolio=portfolio.objects.get(user=profile)
+        addResume=AddResume()
 
+        user_data = UserProfile.objects.select_related(
+        'portfolio'
+        ).prefetch_related(
+            'resume_set',
+            'skills_set',
+            'education_set',
+            'certifications_set',
+            'workexperience_set',
+            'projects_set'
+        ).get(user=request.user)
+        
+        context={
+            "user_portfolio":user_portfolio,
+            "profile":profile,
+            "user_data":user_data,
+            'addResume':addResume,
+            
+        }
+        return render(request, 'user/portfolio_details.html',context)
+    else:
+        return HttpResponse("NOT ALLOWED")
+    
+
+def addPortfolio(request):
+    user_profile=UserProfile.objects.get(user=request.user)
+    if request.method=="POST":
+        addPortfolioForm=AddPortfolio(request.POST)
+        addEducationForm=AddEducation(request.POST)
+
+        addPortfolioForm.user=user_profile
+        addEducationForm.user=user_profile
+        if addPortfolioForm.is_valid() and addEducationForm.is_valid():
+            addPortfolioForm.instance.user=user_profile
+            addEducationForm.instance.user=user_profile
+            addPortfolioForm.save()
+            addEducationForm.save()
+            return redirect('/')
+           
+    return HttpResponse("ADD")
+
+
+def addResume(request):
+    user_profile=UserProfile.objects.get(user=request.user)
+    if request.method=="POST":
+        addResumeForm=AddResume(request.POST,request.FILES)
+
+        addResumeForm.instance.user=user_profile
+        if addResumeForm.is_valid():
+            addResumeForm.instance.user=user_profile
+            print(user_profile)
+            addResumeForm.save()
+            return redirect('/')
+        
+    return HttpResponse("ADD RESUME")
