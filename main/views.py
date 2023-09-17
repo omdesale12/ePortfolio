@@ -10,6 +10,8 @@ def homePage(request):
     }
     return render(request, "main/homePage.html",context)
 
+def test(request):
+    return render(request, "main/tailtest.html")
 def eportfolio(request,email):
     # user=UserProfile.objects.get(user=request.user.email)
     user=get_object_or_404(User,email=email)
