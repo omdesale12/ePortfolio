@@ -1,17 +1,17 @@
-{% load static tailwind_tags %}
 <title>ePortFolio</title>
-{% tailwind_css %}
 
 
 
+<br><br><br>
 {% if user.is_authenticated %}
 <form action="http://localhost:8000/user/logoutUser/" method="post">
-    {% csrf_token %}
-    <button class="bg-slate-700 px-2 py-2 rounded-2xl mt-2 ml-2" type="submit">Logout</button>
+  {% csrf_token %}
+  <button class="bg-slate-700 px-2 py-2 rounded-2xl mt-2 ml-2" type="submit">Logout</button>
 </form>
 <button><a href="http://localhost:8000/user/profile/{{request.user.user_id}}">Profile</a></button>
 {% else %}
-<a href="http://localhost:8000/user/loginUser/"><button class="bg-slate-700 px-2 py-2 rounded-2xl mt-2 ml-2">Login</button></a>
+<a href="http://localhost:8000/user/loginUser/"><button
+    class="bg-slate-700 px-2 py-2 rounded-2xl mt-2 ml-2">Login</button></a>
 {% endif %}<br>
 User:{{request.user}} <br>
 
@@ -20,18 +20,12 @@ User:{{request.user}} <br>
 
 <hr>
 <div class="card" style="width: 18rem;" style="display: inline-block;">
-    {% for portfolios in portfolios %}
-    <img class="card-img-top" src="{{portfolios.user.profile_image.url}}" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title">{{portfolios.user.user.full_name}}</h5>
-      <p class="card-text">{{portfolios.description}}</p>
-      <a href="{% url 'eportfolio' portfolios.user.user.email %}" class="btn btn-primary">Visit PortFolio</a>
-    </div>
-    {% endfor%}
+  {% for portfolios in portfolios %}
+  <img class="card-img-top" src="{{portfolios.user.profile_image.url}}" alt="Card image cap">
+  <div class="card-body">
+    <h5 class="card-title">{{portfolios.user.user.full_name}}</h5>
+    <p class="card-text">{{portfolios.description}}</p>
+    <a href="{% url 'eportfolio' portfolios.user.user.email %}" class="btn btn-primary">Visit PortFolio</a>
+  </div>
+  {% endfor%}
 </div>
-
-
-
-
-
-

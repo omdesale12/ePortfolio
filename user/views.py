@@ -41,11 +41,8 @@ def loginUser(request):
     return render(request, "user/loginUser.html")
 
 def logoutUser(request):
-    if request.method=="POST":
-        logout(request)
-        return redirect('/')
-    else:
-        return HttpResponse("$)$) NOT LOGOUT")
+    logout(request)
+    return redirect('/')
 
 def profile(request,user_id):
     user=get_object_or_404(User,user_id=user_id)
